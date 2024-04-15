@@ -4,9 +4,9 @@ use std::str::FromStr;
 use thumbnailer::error::ThumbResult;
 use thumbnailer::{create_thumbnails, ThumbnailSize};
 
-const PNG_BYTES: &'static [u8] = include_bytes!("assets/test.png");
-const JPG_BYTES: &'static [u8] = include_bytes!("assets/test.jpg");
-const WEBP_BYTES: &'static [u8] = include_bytes!("assets/test.webp");
+const PNG_BYTES: &[u8] = include_bytes!("assets/test.png");
+const JPG_BYTES: &[u8] = include_bytes!("assets/test.jpg");
+const WEBP_BYTES: &[u8] = include_bytes!("assets/test.webp");
 
 enum SourceFormat {
     Png,
@@ -74,7 +74,7 @@ fn write_thumbnail(
     let mut buf = Cursor::new(Vec::new());
     match target_format {
         TargetFormat::Png => thumb.write_png(&mut buf)?,
-        TargetFormat::Jpeg => thumb.write_jpeg(&mut buf, 8)?,
+        TargetFormat::Jpeg => thumb.write_jpeg(&mut buf)?,
     }
 
     Ok(buf.into_inner())

@@ -1,6 +1,7 @@
 # Thumbnailer
 
 This crate can be used to create thumbnails for all kinds of files.
+This fork is to fix the issues with the original crate and version mismatches, uses all the latest versions of dependencies as of `04/15/2024`
 
 ## Usage 
 

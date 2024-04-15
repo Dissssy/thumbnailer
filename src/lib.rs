@@ -9,21 +9,20 @@
 //! use std::io::BufReader;
 //! use std::io::Cursor;
 //!
-//! fn main() {
-//!     let file = File::open("tests/assets/test.png").unwrap();
-//!     let reader = BufReader::new(file);
-//!     let mut  thumbnails = create_thumbnails(reader, mime::IMAGE_PNG, [ThumbnailSize::Small, ThumbnailSize::Medium]).unwrap();
-//!     
-//!     let thumbnail = thumbnails.pop().unwrap();
-//!     let mut buf = Cursor::new(Vec::new());
-//!     thumbnail.write_png(&mut buf).unwrap();
-//! }
+//!
+//! let file = File::open("tests/assets/test.png").unwrap();
+//! let reader = BufReader::new(file);
+//! let mut  thumbnails = create_thumbnails(reader, mime::IMAGE_PNG, [ThumbnailSize::Small, ThumbnailSize::Medium]).unwrap();
+//!
+//! let thumbnail = thumbnails.pop().unwrap();
+//! let mut buf = Cursor::new(Vec::new());
+//! thumbnail.write_png(&mut buf).unwrap();
+//!
 //! ```
 
 use crate::error::ThumbResult;
-use image;
 use image::imageops::FilterType;
-use image::{DynamicImage, GenericImageView, ImageOutputFormat};
+use image::{DynamicImage, GenericImageView, ImageFormat};
 use mime::Mime;
 use rayon::prelude::*;
 use std::io::{BufRead, Seek, Write};
@@ -45,15 +44,15 @@ impl Thumbnail {
     /// Writes the bytes of the image in a png format
     pub fn write_png<W: Write + Seek>(self, writer: &mut W) -> ThumbResult<()> {
         let image = DynamicImage::ImageRgba8(self.inner.into_rgba8());
-        image.write_to(writer, ImageOutputFormat::Png)?;
+        image.write_to(writer, ImageFormat::Png)?;
 
         Ok(())
     }
 
     /// Writes the bytes of the image in a jpeg format
-    pub fn write_jpeg<W: Write + Seek>(self, writer: &mut W, quality: u8) -> ThumbResult<()> {
+    pub fn write_jpeg<W: Write + Seek>(self, writer: &mut W) -> ThumbResult<()> {
         let image = DynamicImage::ImageRgb8(self.inner.into_rgb8());
-        image.write_to(writer, ImageOutputFormat::Jpeg(quality))?;
+        image.write_to(writer, ImageFormat::Jpeg)?;
 
         Ok(())
     }
